@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create.user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -18,10 +19,11 @@ export class UserService {
     }});
 
     if (isUserExists){
-      throw new BadRequestException() 
+      throw new BadRequestException('Email already exists'); 
     }
-
-    const user = await this.userRepository.create(createUserDto);
+    const encryptedPass = await bcrypt.hash(createUserDto.password, 10);
+    const {password, ...allOthers} = createUserDto;
+    const user = await this.userRepository.create({...allOthers, password: encryptedPass});
     return this.userRepository.save(user);
   }
 
@@ -31,5 +33,9 @@ export class UserService {
 
   async findOne(id: string): Promise<UserModel | null> {
     return this.userRepository.findOne({ where: { id } })
+  }
+
+  async findOneByEmail(email: string): Promise<UserModel> {
+    return this.userRepository.findOneByOrFail({ email });
   }
 }

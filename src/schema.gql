@@ -7,6 +7,7 @@ type UserModel {
   username: String!
   email: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 """
@@ -21,6 +22,7 @@ type Query {
 
 type Mutation {
   createUser(createUser: CreateUserDto!): UserModel!
+  login(email: String!, password: String!): String!
 }
 
 input CreateUserDto {
