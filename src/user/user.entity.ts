@@ -21,6 +21,9 @@ export class UserModel {
   @Column()
   password: string;
 
+  @Column({ type:'text', nullable: true })
+  hashedRefreshToken?: string | null;
+
   @Field()
   @CreateDateColumn()
   createdAt: Date;

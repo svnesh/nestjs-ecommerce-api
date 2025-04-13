@@ -38,4 +38,14 @@ export class UserService {
   async findOneByEmail(email: string): Promise<UserModel> {
     return this.userRepository.findOneByOrFail({ email });
   }
+
+  async updateRefreshToken(id: string, refreshToken: string | null) {
+    const user = await this.findOne(id);
+    if (!user){
+      throw new BadRequestException('User not exists');
+    }
+    return this.userRepository.update(id, {
+      hashedRefreshToken: refreshToken
+    });
+  }
 }
