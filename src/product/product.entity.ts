@@ -2,27 +2,24 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { BaseEntity } from "src/common/base.entity";
 import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
 
-
 @ObjectType()
 @Entity()
-export class UserModel extends BaseEntity {
+export class ProductModel extends BaseEntity {
 
   @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Field()
-  @Column({ unique: true })
-  username: string;
+  @Column()
+  name: string;
+
+  @Field({ nullable: true })
+  @Column({  nullable: true })
+  description: string;
 
   @Field()
-  @Column()
-  email: string;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
 
-  @Column()
-  password: string;
-
-  @Column({ type:'text', nullable: true })
-  hashedRefreshToken?: string | null;
-  
 }

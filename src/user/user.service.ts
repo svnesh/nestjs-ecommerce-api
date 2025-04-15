@@ -2,7 +2,7 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create.user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -23,7 +23,11 @@ export class UserService {
     }
     const encryptedPass = await bcrypt.hash(createUserDto.password, 10);
     const {password, ...allOthers} = createUserDto;
-    const user = await this.userRepository.create({...allOthers, password: encryptedPass});
+    const user = await this.userRepository.create({
+      ...allOthers, 
+      password: encryptedPass,
+      createdAt: new Date(),
+    });
     return this.userRepository.save(user);
   }
 

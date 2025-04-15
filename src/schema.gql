@@ -6,23 +6,25 @@ type UserModel {
   id: ID!
   username: String!
   email: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type AuthMutationResponse {
   access_token: String!
   refresh_token: String!
 }
 
+type ProductModel {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+}
+
 type Query {
   getUsers: [UserModel!]!
   getUser(id: String!): UserModel
+  getProducts: [ProductModel!]!
+  getProduct(id: String!): ProductModel
 }
 
 type Mutation {
@@ -30,10 +32,19 @@ type Mutation {
   login(email: String!, password: String!): AuthMutationResponse!
   refreshLogin(userId: String!, refreshToken: String!): AuthMutationResponse!
   logout: Boolean!
+  addProduct(addProduct: CreateProductDto!): ProductModel!
+  updateProduct(id: String!, updateProduct: CreateProductDto!): ProductModel!
+  deleteProduct(id: String!): String!
 }
 
 input CreateUserDto {
   username: String!
   email: String!
   password: String!
+}
+
+input CreateProductDto {
+  name: String!
+  description: String!
+  price: Float!
 }
