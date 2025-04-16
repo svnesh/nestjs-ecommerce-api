@@ -4,6 +4,7 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { GetProductsInput } from './dto/get-products.inputs';
 
 @Resolver(() => ProductModel)
 @UseGuards(GqlAuthGuard)
@@ -14,8 +15,8 @@ export class ProductResolver {
   ){ }
 
   @Query(() => [ProductModel])
-  async getProducts(): Promise<ProductModel[]> {
-    return this.productService.getAllProducts();
+  async getProducts(@Args('input') input: GetProductsInput) {
+    return this.productService.getPaginatedProducts(input);
   }
 
   @Query(() => ProductModel, { nullable: true })

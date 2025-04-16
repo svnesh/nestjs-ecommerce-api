@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductModel } from './product.entity';
 import { IsNull, Like, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
+import { GetProductsInput } from './dto/get-products.inputs';
+import { PaginatedProductsOutput } from './dto/paginated-products.output';
 
 @Injectable()
 export class ProductService {
@@ -52,6 +54,28 @@ export class ProductService {
     return this.productRepository.find({ where: { deletedAt: IsNull() }});
   }
 
+  async getPaginatedProducts(input: GetProductsInput): Promise<PaginatedProductsOutput> {
+    const { after, limit = 10 } = input;
+
+    const query = await this.productRepository.createQueryBuilder('product')
+      .orderBy('product.createdAt', 'DESC')
+      .take(limit + 1);
+
+    if (after){
+      const afterProduct = await this.productRepository.findOneBy({id: after});
+      if (afterProduct){
+        query.andWhere('product.createdAt < :afterId', { afterId: afterProduct.createdAt })
+      }
+    }
+    const products = await query.getMany();
+
+    return {
+      products: products.slice(0, limit),
+      hasMore: products.length > limit
+    }
+
+  }
+
   async getProduct(id: string): Promise<ProductModel | null> {
     const product = await this.productRepository.findOne({ where: {id: id, deletedAt: IsNull() } })
     if (!product) throw new BadGatewayException('Product not exists');
@@ -61,7 +85,7 @@ export class ProductService {
   async deleteProduct(id: string): Promise<any> {
     const product = await this.productRepository.findOne({ where: {id: id, deletedAt: IsNull() } })
     if (!product) throw new BadGatewayException('Product not exists');
-    await this.productRepository
+    return this.productRepository
       .update(id, { deletedAt: new Date() })
       .then((res) => {
         if (res) return id;
