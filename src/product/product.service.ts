@@ -5,6 +5,7 @@ import { IsNull, Like, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductsInput } from './dto/get-products.inputs';
 import { PaginatedProductsOutput } from './dto/paginated-products.output';
+import { ProductFilterInput } from './dto/product-filter.inputs';
 
 @Injectable()
 export class ProductService {
@@ -54,7 +55,7 @@ export class ProductService {
     return this.productRepository.find({ where: { deletedAt: IsNull() }});
   }
 
-  async getPaginatedProducts(input: GetProductsInput): Promise<PaginatedProductsOutput> {
+  async getPaginatedProducts(input: GetProductsInput, filter: any): Promise<PaginatedProductsOutput> {
     const { after, limit = 10 } = input;
 
     const query = await this.productRepository.createQueryBuilder('product')
@@ -67,6 +68,20 @@ export class ProductService {
         query.andWhere('product.createdAt < :afterId', { afterId: afterProduct.createdAt })
       }
     }
+
+    if (filter?.search){
+      query.andWhere('product.name ILIKE :search OR product.description ILIKE :search', {
+        search: `%${filter.search}%`
+      });
+    }
+
+    if (filter?.minPrice !== undefined){
+      query.andWhere('product.price >= :minPrice', { minPrice: filter?.minPrice });
+    }
+    if (filter?.maxPrice !== undefined){
+      query.andWhere('product.price <= :maxPrice', { maxPrice: filter?.maxPrice });
+    }
+
     const products = await query.getMany();
 
     return {

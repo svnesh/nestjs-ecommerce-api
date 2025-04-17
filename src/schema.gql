@@ -20,11 +20,27 @@ type ProductModel {
   price: Float!
 }
 
+type PaginatedProductsOutput {
+  products: [ProductModel!]!
+  hasMore: Boolean
+}
+
 type Query {
   getUsers: [UserModel!]!
   getUser(id: String!): UserModel
-  getProducts: [ProductModel!]!
+  getProducts(input: GetProductsInput!, filter: ProductFilterInput): PaginatedProductsOutput!
   getProduct(id: String!): ProductModel
+}
+
+input GetProductsInput {
+  after: String
+  limit: Float
+}
+
+input ProductFilterInput {
+  search: String
+  minPrice: Float
+  maxPrice: Float
 }
 
 type Mutation {
