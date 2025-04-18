@@ -2,6 +2,10 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { BaseEntity } from "src/common/base.entity";
 import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
 
+export enum Role {
+  USER = 'USER',
+  ADMIN = 'ADMIN'
+}
 
 @ObjectType()
 @Entity()
@@ -24,5 +28,9 @@ export class UserModel extends BaseEntity {
 
   @Column({ type:'text', nullable: true })
   hashedRefreshToken?: string | null;
+
+  @Field()
+  @Column({ type:'enum', enum: Role, default: Role.USER })
+  role: Role;
   
 }
