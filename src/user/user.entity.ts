@@ -20,7 +20,7 @@ export class UserModel extends BaseEntity {
   username: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()

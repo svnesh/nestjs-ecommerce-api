@@ -14,11 +14,18 @@ type AuthMutationResponse {
   refresh_token: String!
 }
 
+type CategoryModel {
+  id: ID!
+  name: String!
+  description: String!
+}
+
 type ProductModel {
   id: ID!
   name: String!
   description: String
   price: Float!
+  category: CategoryModel!
 }
 
 type PaginatedProductsOutput {
@@ -31,6 +38,7 @@ type Query {
   getUser(id: String!): UserModel
   getProducts(input: GetProductsInput!, filter: ProductFilterInput): PaginatedProductsOutput!
   getProduct(id: String!): ProductModel
+  category(id: String!): CategoryModel!
 }
 
 input GetProductsInput {
@@ -52,6 +60,9 @@ type Mutation {
   addProduct(addProduct: CreateProductDto!): ProductModel!
   updateProduct(id: String!, updateProduct: CreateProductDto!): ProductModel!
   deleteProduct(id: String!): String!
+  createCategory(createCategoryInput: CreateCategoryDto!): CategoryModel!
+  updateCategory(updateCategoryInput: UpdateCategoryDto!): CategoryModel!
+  removeCategory(id: String!): CategoryModel!
 }
 
 input CreateUserDto {
@@ -64,4 +75,13 @@ input CreateProductDto {
   name: String!
   description: String!
   price: Float!
+}
+
+input CreateCategoryDto {
+  name: String!
+  description: String!
+}
+
+input UpdateCategoryDto {
+  id: String!
 }

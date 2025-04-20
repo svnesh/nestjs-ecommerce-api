@@ -1,6 +1,8 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { join } from "path";
+import { CategoryModel } from "src/category/entities/category.entity";
 import { BaseEntity } from "src/common/base.entity";
-import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, } from "typeorm";
 
 @ObjectType()
 @Entity()
@@ -21,5 +23,10 @@ export class ProductModel extends BaseEntity {
   @Field()
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
+
+  @Field()
+  @ManyToOne(() => CategoryModel, (category) => category.products, { nullable: true})
+  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
+  category: CategoryModel;
 
 }
