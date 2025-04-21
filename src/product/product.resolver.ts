@@ -10,6 +10,7 @@ import { PaginatedProductsOutput } from './dto/paginated-products.output';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/user/user.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Resolver(() => ProductModel)
 @UseGuards(GqlAuthGuard, RolesGuard)
@@ -34,8 +35,11 @@ export class ProductResolver {
 
   @Roles(Role.ADMIN)
   @Mutation(() => ProductModel)
-  async addProduct(@Args('addProduct') createProductDto: CreateProductDto): Promise<ProductModel> {
-    return this.productService.createProduct(createProductDto);
+  async addProduct(
+    @Args('addProduct') createProductDto: CreateProductDto,
+    @CurrentUser() user: any,
+  ): Promise<ProductModel> {
+    return this.productService.createProduct(createProductDto, user);
   }
 
   @Mutation(() => ProductModel)

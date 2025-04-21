@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductsInput } from './dto/get-products.inputs';
 import { PaginatedProductsOutput } from './dto/paginated-products.output';
 import { ProductFilterInput } from './dto/product-filter.inputs';
+import { create } from 'domain';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +16,7 @@ export class ProductService {
     private productRepository: Repository<ProductModel>,
   ) {}
 
-  async createProduct(createProductDto: CreateProductDto): Promise<ProductModel> {
+  async createProduct(createProductDto: CreateProductDto, user: any): Promise<ProductModel> {
     const product = await this.productRepository.findOne({
       where: {
         name: Like(`${createProductDto.name}`)
@@ -30,7 +31,9 @@ export class ProductService {
     createProduct.name = createProductDto.name;
     createProduct.description = createProductDto.description;
     createProduct.price = createProductDto.price;
+    createProduct.category = createProductDto.categoryId;
     createProduct.createdAt = new Date();
+    createProduct.createdBy = user.id;
 
     const newProduct = await this.productRepository.create(createProduct);
     return this.productRepository.save(newProduct);
@@ -45,6 +48,7 @@ export class ProductService {
     updateProduct.name = updateProductDto.name;
     updateProduct.description = updateProductDto.description;
     updateProduct.price = updateProductDto.price;
+    updateProduct.category = updateProductDto.categoryId;
     updateProduct.updatedAt = new Date();
 
     const updProduct = await this.productRepository.update(id, updateProduct)
@@ -59,6 +63,7 @@ export class ProductService {
     const { after, limit = 10 } = input;
 
     const query = await this.productRepository.createQueryBuilder('product')
+      .leftJoinAndSelect('product.categoryId', 'category')
       .orderBy('product.createdAt', 'DESC')
       .take(limit + 1);
 
@@ -92,7 +97,13 @@ export class ProductService {
   }
 
   async getProduct(id: string): Promise<ProductModel | null> {
-    const product = await this.productRepository.findOne({ where: {id: id, deletedAt: IsNull() } })
+    const product = await this.productRepository.findOne({ 
+      where: {
+        id: id, 
+        deletedAt: IsNull() 
+      },
+      relations: ['category'] 
+    })
     if (!product) throw new BadGatewayException('Product not exists');
     return this.productRepository.findOne({ where: {id: id } })
   }

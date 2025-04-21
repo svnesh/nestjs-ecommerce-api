@@ -29,7 +29,7 @@ export class CategoryService {
     return this.categoryRepository.save(createdCategory);
   }
 
-  findAll(): Promise<CategoryModel[]> {
+  findAll(): Promise<any[]> {
     return this.categoryRepository.find({ where: { deletedAt: IsNull() }});
   }
 

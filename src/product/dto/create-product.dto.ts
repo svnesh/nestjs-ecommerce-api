@@ -19,4 +19,8 @@ export class CreateProductDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   price: number;
 
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  categoryId: string;
 }

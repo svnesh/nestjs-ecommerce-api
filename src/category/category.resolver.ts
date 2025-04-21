@@ -20,12 +20,12 @@ export class CategoryResolver {
     return this.categoryService.create(createCategoryInput, user);
   }
 
-  @Query(() => [CategoryModel], { name: 'category' })
+  @Query(() => [CategoryModel], { name: 'getCategories' })
   findAll() {
     return this.categoryService.findAll();
   }
 
-  @Query(() => CategoryModel, { name: 'category' })
+  @Query(() => CategoryModel, { name: 'getCategory' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.categoryService.findOne(id);
   }

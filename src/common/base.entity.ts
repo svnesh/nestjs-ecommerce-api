@@ -1,8 +1,8 @@
-import { Field } from "@nestjs/graphql";
+import { Field, ObjectType } from "@nestjs/graphql";
 import { UserModel } from "src/user/user.entity";
 import { Column } from "typeorm";
 
-
+@ObjectType()
 export class BaseEntity {
 
   @Field()

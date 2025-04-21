@@ -3,11 +3,20 @@
 # ------------------------------------------------------
 
 type UserModel {
+  createdAt: DateTime!
+  createdBy: String!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: ID!
   username: String!
   email: String!
   role: String!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type AuthMutationResponse {
   access_token: String!
@@ -15,17 +24,25 @@ type AuthMutationResponse {
 }
 
 type CategoryModel {
+  createdAt: DateTime!
+  createdBy: String!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: ID!
   name: String!
   description: String!
 }
 
 type ProductModel {
+  createdAt: DateTime!
+  createdBy: String!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: ID!
   name: String!
   description: String
   price: Float!
-  category: CategoryModel!
+  category: CategoryModel
 }
 
 type PaginatedProductsOutput {
@@ -38,7 +55,8 @@ type Query {
   getUser(id: String!): UserModel
   getProducts(input: GetProductsInput!, filter: ProductFilterInput): PaginatedProductsOutput!
   getProduct(id: String!): ProductModel
-  category(id: String!): CategoryModel!
+  getCategories: [CategoryModel!]!
+  getCategory(id: String!): CategoryModel!
 }
 
 input GetProductsInput {
@@ -75,6 +93,7 @@ input CreateProductDto {
   name: String!
   description: String!
   price: Float!
+  categoryId: String!
 }
 
 input CreateCategoryDto {
@@ -84,4 +103,6 @@ input CreateCategoryDto {
 
 input UpdateCategoryDto {
   id: String!
+  name: String!
+  description: String!
 }

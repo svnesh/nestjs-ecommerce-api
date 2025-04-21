@@ -24,9 +24,9 @@ export class ProductModel extends BaseEntity {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Field()
+  @Field(() => CategoryModel, { nullable: true })
   @ManyToOne(() => CategoryModel, (category) => category.products, { nullable: true})
   @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
-  category: CategoryModel;
+  category: string;
 
 }
