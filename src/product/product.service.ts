@@ -102,10 +102,10 @@ export class ProductService {
         id: id, 
         deletedAt: IsNull() 
       },
-      relations: ['category'] 
+      relations: { category: true } 
     })
     if (!product) throw new BadGatewayException('Product not exists');
-    return this.productRepository.findOne({ where: {id: id } })
+    return product;
   }
 
   async deleteProduct(id: string): Promise<any> {

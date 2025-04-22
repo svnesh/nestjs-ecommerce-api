@@ -26,7 +26,7 @@ export class ProductModel extends BaseEntity {
 
   @Field(() => CategoryModel, { nullable: true })
   @ManyToOne(() => CategoryModel, (category) => category.products, { nullable: true})
-  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
-  category: string;
+  @JoinColumn({ name: 'categoryId' })
+  category: CategoryModel | string;
 
 }

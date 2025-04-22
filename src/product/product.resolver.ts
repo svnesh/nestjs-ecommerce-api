@@ -58,6 +58,28 @@ export class ProductResolver {
 
 
 
+/*-------------------- Graphql ------------- */
+// query GetProduct {
+//   getProduct(id: "d6898b0a-6452-41c7-80dc-982950920d46") {
+//       createdAt
+//       createdBy
+//       id
+//       name
+//       description
+//       price
+//       category {
+//           name
+//           description
+//       }
+//   }
+// }
+
+
+
+
+
+
+
 
 
 /* -------------------- Graphql queries ------------- */
