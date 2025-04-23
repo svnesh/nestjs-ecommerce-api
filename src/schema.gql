@@ -55,6 +55,7 @@ type Query {
   getUser(id: String!): UserModel
   getProducts(input: GetProductsInput!, filter: ProductFilterInput): PaginatedProductsOutput!
   getProduct(id: String!): ProductModel
+  getProductsByCategoryName(name: String!): [ProductModel!]!
   getCategories: [CategoryModel!]!
   getCategory(id: String!): CategoryModel!
 }

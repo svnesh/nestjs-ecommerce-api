@@ -51,6 +51,13 @@ export class ProductResolver {
   async deleteProduct(@Args('id') id: string): Promise<any> {
     return this.productService.deleteProduct(id);
   }
+
+  @Query(() => [ProductModel], { name: 'getProductsByCategoryName' })
+  findProductByCategoryName(
+    @Args('name', { type: () => String }) name: string) {
+    return this.productService.findProductByCategoryName(name);
+  }
+  
 }
 
 

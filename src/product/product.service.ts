@@ -63,7 +63,7 @@ export class ProductService {
     const { after, limit = 10 } = input;
 
     const query = await this.productRepository.createQueryBuilder('product')
-      .leftJoinAndSelect('product.categoryId', 'category')
+      .leftJoinAndSelect('product.category', 'category')
       .orderBy('product.createdAt', 'DESC')
       .take(limit + 1);
 
@@ -116,6 +116,17 @@ export class ProductService {
       .then((res) => {
         if (res) return id;
       })
+  }
+
+  
+  async findProductByCategoryName(name: string): Promise<any[]> {
+    return this.productRepository.createQueryBuilder('product')
+      .innerJoinAndSelect('product.category', 'category')
+      .where('category.name = :name', { name })
+      .andWhere('category.deletedAt IS NULL')
+      .andWhere('product.deletedAt IS NULL')
+      .orderBy('product.createdAt', 'DESC')
+      .getMany()
   }
 
 
