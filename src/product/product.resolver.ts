@@ -11,6 +11,9 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/user/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
+import { join } from 'path';
+import { createWriteStream } from 'fs';
 
 @Resolver(() => ProductModel)
 @UseGuards(GqlAuthGuard, RolesGuard)
@@ -56,6 +59,30 @@ export class ProductResolver {
   findProductByCategoryName(
     @Args('name', { type: () => String }) name: string) {
     return this.productService.findProductByCategoryName(name);
+  }
+
+  @Mutation(() => Boolean)
+  async uploadProductImage(
+    @Args('productId') productId: string,
+    @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
+  ): Promise<boolean> {
+    const { createReadStream, filename } = file;
+    const filePath = join(__dirname, '..', '..', 'uploads', filename);
+
+    //save file to disk
+    await new Promise((resolve, reject) => {
+      createReadStream()
+        .pipe(createWriteStream(filePath))
+        .on('finish', resolve)
+        .on('error', (error) => {
+          console.error('Error saving file:', error);
+          reject(error);
+        });
+    })
+
+    //save the file to product
+    await this.productService.addProductImage(productId, `/uploads/${filename}`);
+    return true;
   }
   
 }

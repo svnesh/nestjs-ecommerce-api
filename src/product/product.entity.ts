@@ -24,6 +24,10 @@ export class ProductModel extends BaseEntity {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  imageUrl?: string;
+
   @Field(() => CategoryModel, { nullable: true })
   @ManyToOne(() => CategoryModel, (category) => category.products, { nullable: true})
   @JoinColumn({ name: 'categoryId' })

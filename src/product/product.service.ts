@@ -117,7 +117,6 @@ export class ProductService {
         if (res) return id;
       })
   }
-
   
   async findProductByCategoryName(name: string): Promise<any[]> {
     return this.productRepository.createQueryBuilder('product')
@@ -129,5 +128,11 @@ export class ProductService {
       .getMany()
   }
 
+  async addProductImage(id: string, imageUrl: string): Promise<void> {
+    const product = await this.productRepository.findOne({ where: { id: id, deletedAt: IsNull() } });
+    if (!product) throw new BadRequestException('Product not exists');
+    product.imageUrl = imageUrl;
+    await this.productRepository.save(product);
+  }
 
 }
