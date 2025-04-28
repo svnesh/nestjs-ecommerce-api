@@ -80,7 +80,7 @@ type Mutation {
   addProduct(addProduct: CreateProductDto!): ProductModel!
   updateProduct(id: String!, updateProduct: CreateProductDto!): ProductModel!
   deleteProduct(id: String!): String!
-  uploadProductImage(productId: String!, file: Upload!): Boolean!
+  uploadProductImage(file: Upload!, productId: String!): Boolean!
   createCategory(createCategoryInput: CreateCategoryDto!): CategoryModel!
   updateCategory(updateCategoryInput: UpdateCategoryDto!): CategoryModel!
   removeCategory(id: String!): CategoryModel!

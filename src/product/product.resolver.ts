@@ -63,12 +63,11 @@ export class ProductResolver {
 
   @Mutation(() => Boolean)
   async uploadProductImage(
-    @Args('productId') productId: string,
     @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
+    @Args('productId') productId: string,
   ): Promise<boolean> {
     const { createReadStream, filename } = file;
     const filePath = join(__dirname, '..', '..', 'uploads', filename);
-
     //save file to disk
     await new Promise((resolve, reject) => {
       createReadStream()
@@ -92,7 +91,7 @@ export class ProductResolver {
 
 
 
-/*-------------------- Graphql ------------- */
+/*-------------------- Detail ------------- */
 // query GetProduct {
 //   getProduct(id: "d6898b0a-6452-41c7-80dc-982950920d46") {
 //       createdAt
@@ -109,14 +108,7 @@ export class ProductResolver {
 // }
 
 
-
-
-
-
-
-
-
-/* -------------------- Graphql queries ------------- */
+/* -------------------- List ------------- */
 // query GetProducts {
 //   getProducts(input: { limit: 2 }) {
 //       hasMore
@@ -128,3 +120,9 @@ export class ProductResolver {
 //       }
 //   }
 // }
+
+/*-------------------- file upload --------------*/
+//operations: {"query": "mutation ($file: Upload!, $productId: String!) { uploadProductImage(file: $file, productId: $productId) }", "variables": {"file":null, "productId":"d6898b0a-6452-41c7-80dc-982950920d46"} }
+//map: {"0":["variables.file"]}
+// file: File
+
