@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { CartModel } from "src/cart/cart.entity";
 import { BaseEntity } from "src/common/base.entity";
-import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, } from "typeorm";
 
 export enum Role {
   USER = 'USER',
@@ -32,5 +33,8 @@ export class UserModel extends BaseEntity {
   @Field()
   @Column({ type:'enum', enum: Role, default: Role.USER })
   role: Role;
+
+  @OneToMany(() => CartModel, (cart) => cart.user)
+  carts: CartModel[]; 
   
 }
